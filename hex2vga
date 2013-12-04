@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# hex2vga -- Christian Koch <cfkoch@sdf.lonestar.org>
+#
+# This script writes a VGA/EGA ("console") font file to stdout, based on a
+# "hex" file as exported by gbdfed(1). I made this because I wanted
+# wscons(4) to load Christian Neukirchen's super awesome "sq" font.
+
+begin
+  infile = ARGV.shift
+  raise ArgumentError if !infile
+
+  in_height = ARGV.shift
+  raise ArgumentError if !in_height
+  in_height = in_height.to_i
+
+  out_height = ARGV.shift
+  raise ArgumentError if !out_height
+  out_height = out_height.to_i
+
+  raise ArugmentError if out_height < in_height
+rescue
+  $stderr.puts("usage: #{File.basename($0)} infile input-height output-height")
+  exit 1
+end
+
+outarray = []
+
+File.readlines(infile).each do |line|
+  line.chomp!
+  fields = line.split(":")
+  i_16 = fields.first.sub("00", "")
+  hex = fields.last
+
+  i = [i_16].pack("H*").unpack("C*").last
+  data = [hex].pack("H*")
+
+  outarray[i] = data
+end
+
+diff = out_height - in_height
+
+outarray.each do |e|
+  if e.nil? or e.empty?
+    $stdout.print("\x00" * out_height)
+    next
+  end
+
+  if diff % 2 == 0
+    pad_top = diff/2
+    pad_bottom = diff/2
+  else
+    pad_top = (diff/2) + 1
+    pad_bottom = diff/2
+  end
+
+  $stdout.print("\x00" * pad_top)
+  $stdout.print(e)
+  $stdout.print("\x00" * pad_bottom)
+end
