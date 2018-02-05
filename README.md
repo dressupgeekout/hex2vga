@@ -10,5 +10,5 @@ For example:
 
     ./hex2vga /path/to/sq.hex 13 16 > sq.816
 
-To the maximum extent possible, I (Christian Koch) disclaim ownership of
+To the maximum extent possible, I (Charlotte Koch) disclaim ownership of
 this code and dedicate it to the public domain.
