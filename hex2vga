@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# hex2vga -- Charlotte Koch <cfkoch@edgebsd.org>
+# hex2vga -- Charlotte Koch <dressupgeekout@gmail.com>
 #
 # This script writes a VGA/EGA ("console") font file to stdout, based on a
 # "hex" file as exported by gbdfed(1). I made this because I wanted
